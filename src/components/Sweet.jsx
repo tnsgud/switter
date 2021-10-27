@@ -1,4 +1,4 @@
-import { deleteDoc, doc } from '@firebase/firestore';
+import { deleteDoc, doc, updateDoc } from '@firebase/firestore';
 import { dbService } from 'fBase';
 import { useState } from 'react';
 
@@ -16,11 +16,27 @@ const Sweet = ({ sweetObj, isOwner }) => {
 
     const toggleEditing = () => setEditing((prev) => !prev);
 
+    const onChange = (event) => {
+        const {
+            target: { value },
+        } = event;
+        setNewSweet(value);
+    };
+
+    const onSubmit = async (event) => {
+        event.preventDefault();
+        await updateDoc(doc(dbService, 'sweet', sweetObj.id), { text: newSweet });
+        setEditing(false);
+    };
+
     return (
         <div>
             {editing ? (
                 <>
-                    <form action=""></form>
+                    <form onSubmit={onSubmit} value="Update Sweet">
+                        <input onChange={onChange} value={newSweet} required />
+                    </form>
+                    <button onClick={toggleEditing}>Cancel</button>
                 </>
             ) : (
                 <>
