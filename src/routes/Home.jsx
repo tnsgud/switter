@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, onSnapshot } from '@firebase/firestore';
 import { dbService } from 'fBase';
+import Sweet from 'components/Sweet';
 
 const Home = ({ userObj }) => {
     const [sweet, setSweet] = useState('');
@@ -8,9 +9,8 @@ const Home = ({ userObj }) => {
 
     useEffect(() => {
         onSnapshot(collection(dbService, 'sweet'), (snapshot) => {
-            snapshot.docs.map((doc) => {
-                console.log(doc.data());
-            });
+            const newArray = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            setSweets(newArray);
         });
     }, []);
 
@@ -47,9 +47,11 @@ const Home = ({ userObj }) => {
             </form>
             <div>
                 {sweets.map((sweet) => (
-                    <div key={sweet.id}>
-                        <h4>{sweet.text}</h4>
-                    </div>
+                    <Sweet
+                        key={sweet.id}
+                        sweetObj={sweet}
+                        isOwner={sweet.creator === userObj.uid}
+                    />
                 ))}
             </div>
         </>
