@@ -1,5 +1,6 @@
 import { deleteDoc, doc, updateDoc } from '@firebase/firestore';
-import { dbService } from 'fBase';
+import { deleteObject, ref } from 'firebase/storage';
+import { dbService, storageService } from 'fBase';
 import { useState } from 'react';
 
 const Sweet = ({ sweetObj, isOwner }) => {
@@ -11,6 +12,10 @@ const Sweet = ({ sweetObj, isOwner }) => {
 
         if (ok) {
             await deleteDoc(doc(dbService, 'sweet', sweetObj.id));
+
+            if (sweetObj.attachmentUrl !== '') {
+                await deleteObject(ref(storageService, sweetObj.attachmentUrl));
+            }
         }
     };
 
@@ -42,6 +47,14 @@ const Sweet = ({ sweetObj, isOwner }) => {
                 <>
                     <div>
                         <h4>{sweetObj.text}</h4>
+                        {sweetObj.attachmentUrl && (
+                            <img
+                                src={sweetObj.attachmentUrl}
+                                width="50px"
+                                height="50px"
+                                alt="sweetImage"
+                            />
+                        )}
                         {isOwner && (
                             <>
                                 <button onClick={onDeleteClick}>Delete Sweet</button>

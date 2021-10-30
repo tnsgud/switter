@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { collection, addDoc, onSnapshot } from '@firebase/firestore';
-import { dbService } from 'fBase';
+import { addDoc, collection, onSnapshot } from '@firebase/firestore';
+import { ref, uploadString, getDownloadURL } from '@firebase/storage';
+import { dbService, storageService } from 'fBase';
 import Sweet from 'components/Sweet';
+import { v4 as uuid } from 'uuid';
 
 const Home = ({ userObj }) => {
     const [sweet, setSweet] = useState('');
@@ -17,13 +19,25 @@ const Home = ({ userObj }) => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        let attachmentUrl = '';
+
+        if (attachment !== '') {
+            const attachmentRef = ref(storageService, `${userObj.uid}/${uuid()}`);
+
+            await uploadString(attachmentRef, attachment, 'data_url');
+
+            attachmentUrl = await getDownloadURL(attachmentRef);
+        }
+
         await addDoc(collection(dbService, 'sweet'), {
             text: sweet,
             createAt: Date.now(),
             creator: userObj.uid,
+            attachmentUrl,
         });
 
         setSweet('');
+        setAttachment('');
     };
 
     const onChange = (event) => {
@@ -47,6 +61,7 @@ const Home = ({ userObj }) => {
             } = finishedEvent;
             setAttachment(result);
         };
+
         reader.readAsDataURL(theFile);
     };
 
@@ -66,7 +81,7 @@ const Home = ({ userObj }) => {
                 <input type="submit" value="Sweet" />
                 {attachment && (
                     <div>
-                        <img src={attachment} width="50px" height="50px" />
+                        <img src={attachment} width="50px" height="50px" alt="selectedImage" />
                         <button onClick={onClearAttachment}>Clear</button>
                     </div>
                 )}
