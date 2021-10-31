@@ -61,7 +61,7 @@ const SweetFactory = ({ userObj }) => {
     const onClearAttachment = () => setAttachment('');
 
     return (
-        <form onSubmit={onSubmit} className="factoryForm">
+        <form onSubmit={onSubmit} className="factoryFor">
             <div className="factoryInput__container">
                 <input
                     value={sweet}
