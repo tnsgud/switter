@@ -2,6 +2,8 @@ import { deleteDoc, doc, updateDoc } from '@firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import { dbService, storageService } from 'fBase';
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Sweet = ({ sweetObj, isOwner }) => {
     const [editing, setEditing] = useState(false);
@@ -35,33 +37,39 @@ const Sweet = ({ sweetObj, isOwner }) => {
     };
 
     return (
-        <div>
+        <div className="sweet">
             {editing ? (
                 <>
-                    <form onSubmit={onSubmit} value="Update Sweet">
-                        <input onChange={onChange} value={newSweet} required />
+                    <form onSubmit={onSubmit} value="Update Sweet" className="container sweetEdit">
+                        <input
+                            onChange={onChange}
+                            value={newSweet}
+                            required
+                            className="formInput"
+                        />
+                        <input type="submit" value="Update Sweet" className="formBtn" />
                     </form>
-                    <button onClick={toggleEditing}>Cancel</button>
+
+                    <span onClick={toggleEditing} className="formBtn cancelBtn">
+                        Cancel
+                    </span>
                 </>
             ) : (
                 <>
-                    <div>
-                        <h4>{sweetObj.text}</h4>
-                        {sweetObj.attachmentUrl && (
-                            <img
-                                src={sweetObj.attachmentUrl}
-                                width="50px"
-                                height="50px"
-                                alt="sweetImage"
-                            />
-                        )}
-                        {isOwner && (
-                            <>
-                                <button onClick={onDeleteClick}>Delete Sweet</button>
-                                <button onClick={toggleEditing}>Edit Sweet</button>
-                            </>
-                        )}
-                    </div>
+                    <h4>{sweetObj.text}</h4>
+                    {sweetObj.attachmentUrl && (
+                        <img src={sweetObj.attachmentUrl} alt="sweetImage" />
+                    )}
+                    {isOwner && (
+                        <div class="sweet__actions">
+                            <span onClick={onDeleteClick}>
+                                <FontAwesomeIcon icon={faTrash} />
+                            </span>
+                            <span onClick={toggleEditing}>
+                                <FontAwesomeIcon icon={faPencilAlt} />
+                            </span>
+                        </div>
+                    )}
                 </>
             )}
         </div>
