@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { authService, dbService } from 'fBase';
 import { collection, getDocs, query, where, orderBy } from '@firebase/firestore';
+import { updateProfile } from '@firebase/auth';
 
 const Profile = ({ userObj }) => {
     const history = useHistory();
@@ -16,6 +17,7 @@ const Profile = ({ userObj }) => {
         const {
             target: { value },
         } = event;
+
         setNewDisplayName(value);
     };
 
@@ -36,8 +38,12 @@ const Profile = ({ userObj }) => {
         getMySweets();
     }, []);
 
-    const onSubmit = (event) => {
+    const onSubmit = async (event) => {
         event.preventDefault();
+        if (userObj.displayName !== newDisplayName) {
+            await updateProfile(userObj, { displayName: newDisplayName });
+            window.location.reload();
+        }
     };
 
     return (
