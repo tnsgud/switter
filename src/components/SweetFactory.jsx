@@ -47,14 +47,14 @@ const SweetFactory = ({ userObj }) => {
         } = event;
         const theFile = files[0];
         const reader = new FileReader();
-
+        reader.onloadend = (finishedEvent) => {
+            const {
+                currentTarget: { result },
+            } = finishedEvent;
+            setAttachment(result);
+        };
         if (Boolean(theFile)) {
-            reader.onloadend = (finishedEvent) => {
-                const {
-                    currentTarget: { result },
-                } = finishedEvent;
-                setAttachment(result);
-            };
+            reader.readAsDataURL(theFile);
         }
     };
 
