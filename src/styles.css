@@ -108,7 +108,7 @@ form {
     height: 40px;
     padding: 0px 20px;
     color: white;
-    border: 1px solid #04aaff;
+    border: 1px solid #9932cc;
     border-radius: 20px;
     font-weight: 500;
     font-size: 12px;
@@ -117,7 +117,7 @@ form {
 .factoryInput__arrow {
     position: absolute;
     right: 0;
-    background-color: #04aaff;
+    background-color: #9932cc;
     height: 40px;
     width: 40px;
     padding: 10px 0px;
@@ -253,7 +253,7 @@ form {
 
 .authSubmit {
     text-align: center;
-    background: rgb(0, 133, 202);
+    background: darkorchid;
     color: white;
     margin-top: 10px;
     box-sizing: content-box;
